@@ -5,11 +5,19 @@ function setup() {
     noiser = new p5.Noise();
     noiser.amp(0.1);
 
-    playBtn = createButton('play').position(50, 10).mousePressed(()=>{ noiser.start() })
-    stopBtn = createButton('stop').position(50, 50).mousePressed(()=>{ noiser.stop() })
+
+    onOff = createButton('play').position(50, 10).mousePressed(()=>{
+        if (noiser.started) {
+            noiser.stop();
+            onOff.html('play')
+        } else{
+            noiser.start()
+            onOff.html('stop')
+        }
+    })
 
     noiseChose = createSelect();
-    noiseChose.position(50,100);
+    noiseChose.position(50,50);
     noiseChose.option('white')
     noiseChose.option('pink')
     noiseChose.option('brown')
@@ -18,12 +26,12 @@ function setup() {
         noiser.setType(noiseChose.value())
     })
     
-    volumeSet = createSlider()
-    volumeSet.position(50, 150)
+    volumeSet = createSlider(0, 1, 0, 0.1)
+    volumeSet.position(50, 100)
     
-    volumeSet.changed(()=>{
-        noiser.amp(volumeSet.value() / 100)
-        console.log(volumeSet.value()/100);
+    volumeSet.input(()=>{
+        noiser.amp(volumeSet.value(), 0.1)
+        console.log(volumeSet.value());
         
     })
 }
